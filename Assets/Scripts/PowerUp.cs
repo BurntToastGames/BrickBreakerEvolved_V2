@@ -27,7 +27,7 @@ public class PowerUp : MonoBehaviour
 
         if(trans.position.y < -4.5)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 

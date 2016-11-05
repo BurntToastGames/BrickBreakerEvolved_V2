@@ -7,11 +7,15 @@ public class GameManager : MonoBehaviour
 	public Player player1, player2;
     public GameObject LinePrefab;
 	public GameObject gameOverPanel;
+    public GameObject PowerUpPrefab;
 	public int maxLineCount;
 
-    public int bricksPerLine = 12;    //bricks needed to send a line.
-    public float scorePerBrick = 50f; //score needed to send a brick.
-    public float brickValue = 100f;    //default score awarded per brick hit.
+    public int bricksPerLine = 12;       //bricks needed to send a line.
+    public float scorePerBrick = 50f;    //score needed to send a brick.
+    public float brickValue = 100f;      //default score awarded per brick hit.
+
+    public float powerUpSpawnRate = 10f; //In seconds.
+    private bool isGameOver = false;     //Variable to let Power-Ups know when to stop spawning.
 
     private float lineSpaceConst = 1.14f;
 
@@ -89,6 +93,9 @@ public class GameManager : MonoBehaviour
 
         player1WinsText.text = player1.wins.ToString();
         player2WinsText.text = player2.wins.ToString();
+
+        //Start Dropping Powerups after 5 seconds.
+        InvokeRepeating("spawnPowerUp" , 5f , 10f);
     }
     int brickCountHelper(GameObject brickGroup)
     {
@@ -101,12 +108,30 @@ public class GameManager : MonoBehaviour
         return brickCount;
     }
 
-
     // Update is called once per frame
     void Update ()
     {
         //Victory by board clear.
         checkClearVictory(player1, player2);
+    }
+
+    //Spawns a powerup to a given player. The disadvantaged player has a better chance of getting the spawned power-up (advantage is based on score).
+    void spawnPowerUp()
+    {
+        //score ratio is the fraction of player1's points to all score earned. scoreRatio > 0.5 means player1 is winning. 
+        float scoreRatio = (player1.score + player2.score) == 0 ? 0.5f : player1.score / (player1.score + player2.score);
+        //Determines which board will recieve the Power Up
+        int playerToRecieve = Random.value >= scoreRatio ? 1 : 2;
+
+        //Determine Properties for newly instantiated Power Up.
+        GameObject paddleToRecieve = GameObject.FindGameObjectWithTag("Paddle" + playerToRecieve);
+        int powerUpType = Random.Range(0, System.Enum.GetNames(typeof(PowerUpKey)).GetLength(0));
+
+        GameObject instantiatedPowerUp = Instantiate(PowerUpPrefab, new Vector3(paddleToRecieve.transform.position.x, 4.5f), Quaternion.identity) as GameObject;
+        PowerUp powerUp = instantiatedPowerUp.GetComponent<PowerUp>();
+
+        powerUp.PowerUpPaddle = paddleToRecieve;
+        powerUp.powerUpName = (PowerUpKey)powerUpType;
     }
 
 	//End the game, display the GameOver panel, stop time, and display outcome text
@@ -116,10 +141,12 @@ public class GameManager : MonoBehaviour
 		gameOverPanel.SetActive(true);
         gameOverText.text = winner.name + " wins!";
 
-        winner.wins++;
+        winner.wins = 1;
         player1WinsText.text = winner.wins.ToString();
         player2WinsText.text = loser.wins.ToString();
-		
+
+        CancelInvoke("spawnPowerUp");
+
         Time.timeScale = 0f;
 	}
 	
@@ -315,7 +342,13 @@ public class Power : MonoBehaviour
 
 			if (player.Paddle.transform.childCount > 0) 
 			{
-				player.Ball.transform.parent = null;
+                if (player.Ball == null)
+                {
+                    print("renewed in MultiBall");
+                    player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
+                }
+
+                player.Ball.transform.parent = null;
 				player.Paddle.transform.localScale = newSize;
 				player.Ball.transform.parent = player.Paddle.transform;
 			} 
@@ -340,7 +373,13 @@ public class Power : MonoBehaviour
 			print ("ShrinkPaddle");
 			if (player.Paddle.transform.childCount > 0) 
 			{
-				player.Ball.transform.parent = null;
+                if (player.Ball == null)
+                {
+                    print("renewed in MultiBall");
+                    player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
+                }
+
+                player.Ball.transform.parent = null;
 				player.Paddle.transform.localScale = newSize;
 				player.Ball.transform.parent = player.Paddle.transform;
 			} 
