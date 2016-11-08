@@ -332,66 +332,70 @@ public class Power : MonoBehaviour
     {
         print("PowerUp Received on " + player.name);
     }
+	static void ResetPaddleToOne(Player player)
+	{
+		Vector3 newSize = player.Paddle.transform.localScale;
+		newSize.x = 1f;
 
+		if (player.Paddle.transform.childCount > 0) 
+		{
+			if (player.Ball == null)
+			{
+				print("renewed in MultiBall");
+				player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
+			}
+
+			player.Ball.transform.parent = null;
+			player.Paddle.transform.localScale = newSize;
+			player.Ball.transform.parent = player.Paddle.transform;
+		} 
+		else 
+		{
+			player.Paddle.transform.localScale = newSize;
+		}
+	}
+	static void AdjustPaddleSize(Player player, float scaleAmount)
+	{
+		Vector3 newSize = player.Paddle.transform.localScale;
+		newSize.x = newSize.x + scaleAmount;
+
+		if (player.Paddle.transform.childCount > 0) 
+		{
+			if (player.Ball == null)
+			{
+				print("renewed in MultiBall");
+				player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
+			}
+
+			player.Ball.transform.parent = null;
+			player.Paddle.transform.localScale = newSize;
+			player.Ball.transform.parent = player.Paddle.transform;
+		} 
+		else 
+		{
+			player.Paddle.transform.localScale = newSize;
+		}
+	}
 	static void GrowPaddle(Player player, applyPowerUpInfo power)//Grow paddle by scaleConstant when the player collects the GrowPaddle powerup
 	{
 		if (player.Paddle.transform.localScale.x == 1f) //Increase size of paddle ONLY if paddle is size 1
 		{
-			Vector3 newSize = player.Paddle.transform.localScale;
-			newSize.x = newSize.x + power.scaleAmount;
-
-			if (player.Paddle.transform.childCount > 0) 
-			{
-                if (player.Ball == null)
-                {
-                    print("renewed in MultiBall");
-                    player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
-                }
-
-                player.Ball.transform.parent = null;
-				player.Paddle.transform.localScale = newSize;
-				player.Ball.transform.parent = player.Paddle.transform;
-			} 
-			else 
-			{
-				player.Paddle.transform.localScale = newSize;
-			}
+			AdjustPaddleSize (player, power.scaleAmount);
 		}
 		if (player.Paddle.transform.localScale.x < 1f)//reset size of paddle if paddle was shrunken
 		{
-			Vector3 paddleSize = player.Paddle.transform.localScale;
-			paddleSize.x = 1f;	
+			ResetPaddleToOne (player);	
 		} 
 	}
 	static void ShrinkPaddle(Player player, applyPowerUpInfo power)//Decrease opponents paddle by scaleConstant when player collects ShrinkPaddle powerup
 	{
 		if (player.Paddle.transform.localScale.x == 1f) //Decrease size of paddle ONLY if paddle is size 1
 		{
-			Vector3 newSize = player.Paddle.transform.localScale;
-			newSize.x = newSize.x - power.scaleAmount;
-
-			print ("ShrinkPaddle");
-			if (player.Paddle.transform.childCount > 0) 
-			{
-                if (player.Ball == null)
-                {
-                    print("renewed in MultiBall");
-                    player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
-                }
-
-                player.Ball.transform.parent = null;
-				player.Paddle.transform.localScale = newSize;
-				player.Ball.transform.parent = player.Paddle.transform;
-			} 
-			else 
-			{
-				player.Paddle.transform.localScale = newSize;
-			}
+			AdjustPaddleSize (player, -power.scaleAmount);
 		}
 		if (player.Paddle.transform.localScale.x > 1f)//reset size of paddle if paddle was grown
 		{
-			Vector3 paddleSize = player.Paddle.transform.localScale;
-			paddleSize.x = 1f;	
+			ResetPaddleToOne (player);
 		} 
 	}
 
