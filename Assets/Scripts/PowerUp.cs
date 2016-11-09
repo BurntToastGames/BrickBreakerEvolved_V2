@@ -11,6 +11,8 @@ public class PowerUp : MonoBehaviour
 
     public float FallSpeed = 5f;
 
+    public int addLineUpperBound = 3;
+
     Transform trans;
 
 	// Use this for initialization
@@ -37,7 +39,8 @@ public class PowerUp : MonoBehaviour
         {
             GameObject.Find("Game Manager").SendMessage("applyPowerUp", new applyPowerUpInfo { player = col.gameObject.tag.EndsWith("1") ? 1 : 2 ,
 																						   powerUpKey = powerUpName,
-																						  scaleAmount = scaleAmount		} );
+																						  scaleAmount = scaleAmount,
+                                                                                    addLineUpperBound = addLineUpperBound} );
             Destroy(this.gameObject);
         }
     }
@@ -50,9 +53,11 @@ public struct applyPowerUpInfo
 	public float scaleAmount { get; set; } 
 
     public PowerUpKey powerUpKey { get; set; }
+
+    public int addLineUpperBound { get; set; }
 }
 
 public enum PowerUpKey
 {
-    GrowPaddle, ShrinkPaddle, MultiBall
+    GrowPaddle, ShrinkPaddle, MultiBall, AddLine
 }

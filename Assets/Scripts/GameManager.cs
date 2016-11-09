@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -121,11 +122,11 @@ public class GameManager : MonoBehaviour
         //score ratio is the fraction of player1's points to all score earned. scoreRatio > 0.5 means player1 is winning. 
         float scoreRatio = (player1.score + player2.score) == 0 ? 0.5f : player1.score / (player1.score + player2.score);
         //Determines which board will recieve the Power Up
-        int playerToRecieve = Random.value >= scoreRatio ? 1 : 2;
+        int playerToRecieve = UnityEngine.Random.value >= scoreRatio ? 1 : 2;
 
         //Determine Properties for newly instantiated Power Up.
         GameObject paddleToRecieve = GameObject.FindGameObjectWithTag("Paddle" + playerToRecieve);
-        int powerUpType = Random.Range(0, System.Enum.GetNames(typeof(PowerUpKey)).GetLength(0));
+        int powerUpType = UnityEngine.Random.Range(0, System.Enum.GetNames(typeof(PowerUpKey)).GetLength(0));
 
         GameObject instantiatedPowerUp = Instantiate(PowerUpPrefab, new Vector3(paddleToRecieve.transform.position.x, 4.5f), Quaternion.identity) as GameObject;
         PowerUp powerUp = instantiatedPowerUp.GetComponent<PowerUp>();
@@ -163,7 +164,7 @@ public class GameManager : MonoBehaviour
 	void checkLineVictory(Player player1, Player player2)
 	{
 		//print ("Player1BrickLines :" + player1.BrickGroup.transform.childCount);
-		print ("Player2BrickLines :" + player2.BrickGroup.transform.childCount);
+		//print ("Player2BrickLines :" + player2.BrickGroup.transform.childCount);
 
 		if (player1.BrickGroup.transform.childCount >= maxLineCount) {
 			gameOver(player2, player1);
@@ -184,7 +185,7 @@ public class GameManager : MonoBehaviour
 
 		while (tempPlayer.pendingBricks >= bricksPerLine)
 		{
-			AddLine (tempPlayer, victim);
+            AddLine (tempPlayer, victim);
 		}
 
 		player1PendingText.text = "Pending : " + player2.pendingBricks;
@@ -237,9 +238,9 @@ public class GameManager : MonoBehaviour
 
 	void AddLine(Player tempPlayer , Player victim)
 	{
-		tempPlayer.pendingBricks -= bricksPerLine;
+        tempPlayer.pendingBricks -= bricksPerLine;
 
-		Vector3 newBrickGroupPosition = new Vector3(victim.BrickGroup.transform.position.x,
+        Vector3 newBrickGroupPosition = new Vector3(victim.BrickGroup.transform.position.x,
 		victim.BrickGroup.transform.position.y - (lineSpaceConst * victim.BrickGroup.transform.localScale.y));
 
 		victim.BrickGroup.transform.position = newBrickGroupPosition;
@@ -257,7 +258,7 @@ public class GameManager : MonoBehaviour
     {
 		Player player;
 
-		if (info.powerUpKey == PowerUpKey.ShrinkPaddle) //Swap player values for ShrinkPaddle Powerup
+		if (info.powerUpKey == PowerUpKey.ShrinkPaddle) //Players to act upon for ShrinkPaddle Powerup.
 		{
 			player = info.player == 1 ? player2 : player1;
 		} 
@@ -325,13 +326,24 @@ public class Power : MonoBehaviour
             case PowerUpKey.MultiBall:
 				MultiBall(player);
                 break;
+            case PowerUpKey.AddLine:
+                AddLine(player , power);
+                break;
         }
     }
 
-    static void Test(Player player)
+    static void AddLine(Player player, applyPowerUpInfo power)
     {
-        print("PowerUp Received on " + player.name);
+        GameManager GMref = (GameManager)GameObject.Find("Game Manager").GetComponent<GameManager>();
+
+        int linesToAdd = UnityEngine.Random.Range(1, power.addLineUpperBound);
+        int bricksToAdd = (linesToAdd * GMref.bricksPerLine) - ((int)(GMref.brickValue/GMref.scorePerBrick));
+
+        player.pendingBricks += bricksToAdd;
+
+        GameObject.Find("Game Manager").SendMessage("sendBricks", player.playerNumber);
     }
+
 	static void ResetPaddleToOne(Player player)
 	{
 		Vector3 newSize = player.Paddle.transform.localScale;
