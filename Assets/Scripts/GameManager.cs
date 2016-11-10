@@ -344,7 +344,7 @@ public class Power : MonoBehaviour
         GameObject.Find("Game Manager").SendMessage("sendBricks", player.playerNumber);
     }
 
-	static void ResetPaddleToOne(Player player)
+	public static void ResetPaddleToOne(Player player)
 	{
 		Vector3 newSize = player.Paddle.transform.localScale;
 		newSize.x = 1f;
@@ -353,7 +353,6 @@ public class Power : MonoBehaviour
 		{
 			if (player.Ball == null)
 			{
-				print("renewed in MultiBall");
 				player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
 			}
 
@@ -375,7 +374,6 @@ public class Power : MonoBehaviour
 		{
 			if (player.Ball == null)
 			{
-				print("renewed in MultiBall");
 				player.Ball = GameObject.FindGameObjectWithTag("Ball" + player.playerNumber);
 			}
 
