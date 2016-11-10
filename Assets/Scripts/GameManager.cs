@@ -396,8 +396,8 @@ public class Power : MonoBehaviour
 		}
 		if (player.Paddle.transform.localScale.x < 1f)//reset size of paddle if paddle was shrunken
 		{
-			ResetPaddleToOne (player);	
-		} 
+			ResetPaddleToOne (player);	 
+		}
 	}
 	static void ShrinkPaddle(Player player, applyPowerUpInfo power)//Decrease opponents paddle by scaleConstant when player collects ShrinkPaddle powerup
 	{
@@ -433,5 +433,6 @@ public class Power : MonoBehaviour
 
         castedNewBall.GetComponent<Rigidbody2D>().AddForce(new Vector3(Input.GetAxis("Horizontal" + player.playerNumber) * castedNewBall.StartingSpeed, castedNewBall.StartingSpeed));
     }
+
 
 }

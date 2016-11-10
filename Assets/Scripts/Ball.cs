@@ -10,6 +10,9 @@ public class Ball : MonoBehaviour
 	public float MinSpeed = 7.5f;
 	public float MaxSpeed = 40f;
 	public float StartingSpeed = 250f;
+    public float respawnTime = 2f;
+
+
 	private Vector2 startVelocity;
 
     private GameObject ball;
@@ -17,6 +20,8 @@ public class Ball : MonoBehaviour
 
     internal bool ballInPlay = false;
     private Vector2 paddleSpeed;
+
+    private bool waitingToRespawn = false;
 
 	// Use this for initialization
 	void Start ()
@@ -55,11 +60,13 @@ public class Ball : MonoBehaviour
 			startVelocity.Set(Input.GetAxis("Horizontal" + Player) * StartingSpeed, StartingSpeed);
             rig2D.AddForce(startVelocity);
         }
-
-        outOfBoundsCheck();
+        if (!waitingToRespawn)
+        {
+            StartCoroutine(outOfBoundsCheck());
+        }
 	}
 
-    void outOfBoundsCheck()
+    IEnumerator outOfBoundsCheck()
     {   
         //Ball OOB + Reset
         if (transform.position.y < -4.5)
@@ -67,6 +74,10 @@ public class Ball : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag("Ball" + Player).GetLength(0) == 1)
             {
                 Destroy(Instantiate(DeathParticles, gameObject.transform.position, Quaternion.identity), 4);
+
+                waitingToRespawn = true;
+
+                yield return new WaitForSeconds(respawnTime);
 
                 transform.parent = GameObject.FindGameObjectWithTag("Paddle" + Player).transform;
                 ballInPlay = false;
@@ -82,6 +93,8 @@ public class Ball : MonoBehaviour
                 {
                     ball = this.gameObject;
                 }
+
+                waitingToRespawn = false;
             }
             else
             {

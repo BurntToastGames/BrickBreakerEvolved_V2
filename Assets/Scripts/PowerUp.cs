@@ -5,6 +5,8 @@ public class PowerUp : MonoBehaviour
 {
     public GameObject PowerUpPaddle;
 
+    public float powerUpDuration = 10f;
+
 	public PowerUpKey powerUpName = PowerUpKey.GrowPaddle;
 
 	public float scaleAmount = 0.4f;
@@ -41,13 +43,16 @@ public class PowerUp : MonoBehaviour
 																						   powerUpKey = powerUpName,
 																						  scaleAmount = scaleAmount,
                                                                                     addLineUpperBound = addLineUpperBound} );
-            Destroy(this.gameObject);
+
+           Destroy(this.gameObject);
         }
     }
 }
 
 public struct applyPowerUpInfo
 {
+    public float powerUpDuration { get; set; }
+
     public int player { get; set; }
 
 	public float scaleAmount { get; set; } 
