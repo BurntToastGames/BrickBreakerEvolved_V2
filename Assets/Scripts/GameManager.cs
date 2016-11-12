@@ -6,7 +6,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
 	public Player player1, player2;
-    public GameObject LinePrefab;
+    public GameObject[] LinePrefabs;
 	public GameObject gameOverPanel;
     public GameObject PowerUpPrefab;
 	public int maxLineCount;
@@ -248,7 +248,10 @@ public class GameManager : MonoBehaviour
 		Vector3 newLinePositionWithinParent = new Vector3(0, victim.recentlyAddedLineY + lineSpaceConst);
 		victim.recentlyAddedLineY += lineSpaceConst;
 
-		GameObject newLine = Instantiate(LinePrefab, victim.BrickGroup.transform.position, Quaternion.identity) as GameObject;
+        //int linePrefabToSpawn = victim.playerNumber == 1 ? UnityEngine.Random.Range(0,LinePrefabs.GetLength(0)/2) : UnityEngine.Random.Range(LinePrefabs.GetLength(0)/2, LinePrefabs.GetLength(0) );
+        int linePrefabToSpawn = UnityEngine.Random.Range(0, LinePrefabs.GetLength(0));
+
+        GameObject newLine = Instantiate(LinePrefabs[linePrefabToSpawn], victim.BrickGroup.transform.position, Quaternion.identity) as GameObject;
 		newLine.transform.parent = victim.BrickGroup.transform;
 		newLine.transform.localPosition = newLinePositionWithinParent;
 		newLine.transform.localScale = Vector3.one;	
