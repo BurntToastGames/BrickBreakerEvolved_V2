@@ -49,13 +49,13 @@ public class PowerUp : MonoBehaviour
     }
 }
 
-public struct applyPowerUpInfo
+public class applyPowerUpInfo
 {
     public float powerUpDuration { get; set; }
 
     public int player { get; set; }
 
-	public float scaleAmount { get; set; } 
+    public float scaleAmount { get; set; }
 
     public PowerUpKey powerUpKey { get; set; }
 

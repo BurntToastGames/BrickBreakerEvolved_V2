@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Ball : MonoBehaviour
 {
@@ -75,6 +76,8 @@ public class Ball : MonoBehaviour
             {
                 Destroy(Instantiate(DeathParticles, gameObject.transform.position, Quaternion.identity), 4);
 
+                ResetPaddles(Player);
+
                 waitingToRespawn = true;
 
                 yield return new WaitForSeconds(respawnTime);
@@ -104,5 +107,35 @@ public class Ball : MonoBehaviour
             }
         }
     }
-		
+
+    //Adjusts paddles sizes based on player that missed the ball.
+    private void ResetPaddles(int player)
+    {
+        if(player == 1)
+        {
+            if(GameObject.FindGameObjectWithTag("Paddle2").transform.localScale.x < 1)
+            {
+                print("Grew Paddle 2");
+                GameObject.Find("Game Manager").SendMessage("applyPowerUp", new applyPowerUpInfo() { player = 2, powerUpKey = PowerUpKey.GrowPaddle, scaleAmount = 0.4f });
+            }
+            if (GameObject.FindGameObjectWithTag("Paddle1").transform.localScale.x > 1)
+            {
+                print("Shrunk Paddle 1");
+                GameObject.Find("Game Manager").SendMessage("applyPowerUp", new applyPowerUpInfo() { player = 2, powerUpKey = PowerUpKey.ShrinkPaddle, scaleAmount = 0.4f });
+            }
+        }
+        if (player == 2)
+        {
+            if (GameObject.FindGameObjectWithTag("Paddle1").transform.localScale.x < 1)
+            {
+                print("Grew Paddle 1");
+                GameObject.Find("Game Manager").SendMessage("applyPowerUp", new applyPowerUpInfo() { player = 1, powerUpKey = PowerUpKey.GrowPaddle, scaleAmount = 0.4f });
+            }
+            if (GameObject.FindGameObjectWithTag("Paddle2").transform.localScale.x > 1)
+            {
+                print("Shrunk Paddle 2");
+                GameObject.Find("Game Manager").SendMessage("applyPowerUp", new applyPowerUpInfo() { player = 1, powerUpKey = PowerUpKey.ShrinkPaddle, scaleAmount = 0.4f });
+            }
+        }
+    }
 }
