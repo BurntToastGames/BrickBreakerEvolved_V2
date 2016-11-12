@@ -75,6 +75,7 @@ public class Ball : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag("Ball" + Player).GetLength(0) == 1)
             {
                 Destroy(Instantiate(DeathParticles, gameObject.transform.position, Quaternion.identity), 4);
+                gameObject.transform.GetChild(0).gameObject.SetActive(false);
 
                 ResetPaddles(Player);
 
@@ -87,6 +88,7 @@ public class Ball : MonoBehaviour
                 rig2D.isKinematic = true;
                 rig2D.velocity = Vector2.zero;
                 this.transform.position = new Vector2(transform.parent.position.x, transform.parent.position.y + 1.5f * transform.parent.localScale.y);
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
 
                 //Reset The Player Combo
                 GameObject.FindGameObjectWithTag("Game Manager").SendMessage("resetCombo", Player);
