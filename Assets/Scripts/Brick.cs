@@ -4,11 +4,19 @@ using System;
 
 public class Brick : MonoBehaviour
 {
+    GameObject DPBlue;
+    GameObject DPRed;
+
+    void Start()
+    {
+        DPBlue = Resources.Load<GameObject>("PickupExplodeBlue");
+        DPRed = Resources.Load<GameObject>("PickupExplodeRed");
+    }
 
     //this.transform.parent.parent <- if brick is in line, returns the brickGroup
 	void OnCollisionEnter2D(Collision2D col)
     {
-
+        SpawnDP(col);
 
         //Lets GM know when a brick has been broken.
         GMSendBricks();
@@ -20,6 +28,19 @@ public class Brick : MonoBehaviour
         }
 
         Destroy(this.gameObject);
+    }
+
+    void SpawnDP(Collision2D collision)
+    {
+        int player = gameObject.transform.parent.parent.gameObject.CompareTag("Bricks1") ? 1 : 2;
+
+        Vector3 contactPoint = collision.contacts[0].point;
+
+        if(player == 1)
+            Destroy(Instantiate(DPBlue, contactPoint, Quaternion.identity), 4f);
+        else
+            Destroy(Instantiate(DPRed, contactPoint, Quaternion.identity), 4f);
+
     }
 
     void ScootLinesUp(float brickYPos)
