@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public float brickValue = 100f;      //default score awarded per brick hit.
 
     public float powerUpSpawnRate = 10f; //In seconds.
-    private bool isGameOver = false;     //Variable to let Power-Ups know when to stop spawning.
 
     private float lineSpaceConst = 1.14f;
 
@@ -133,6 +132,33 @@ public class GameManager : MonoBehaviour
 
         powerUp.PowerUpPaddle = paddleToRecieve;
         powerUp.powerUpName = (PowerUpKey)powerUpType;
+
+        instantiatedPowerUp.GetComponent<SpriteRenderer>().sprite = null;
+
+        GameObject particles;
+
+        switch (powerUp.powerUpName)
+        {
+            case PowerUpKey.GrowPaddle:
+                particles = Instantiate(Resources.Load<GameObject>("PowerRingGreen"), instantiatedPowerUp.transform.position, Quaternion.identity) as GameObject;
+                particles.transform.parent = instantiatedPowerUp.transform; 
+                break;
+            case PowerUpKey.ShrinkPaddle:
+                particles = Instantiate(Resources.Load<GameObject>("PowerRingRed"), instantiatedPowerUp.transform.position, Quaternion.identity) as GameObject;
+                particles.transform.parent = instantiatedPowerUp.transform;
+                break;
+            case PowerUpKey.MultiBall:
+                particles = Instantiate(Resources.Load<GameObject>("PowerRingYellow"), instantiatedPowerUp.transform.position, Quaternion.identity) as GameObject;
+                particles.transform.parent = instantiatedPowerUp.transform;
+                break;
+            case PowerUpKey.AddLine:
+                particles = Instantiate(Resources.Load<GameObject>("PowerRingBlue"), instantiatedPowerUp.transform.position, Quaternion.identity) as GameObject;
+                particles.transform.parent = instantiatedPowerUp.transform;
+                break;
+            default:
+                break;
+        }
+
     }
 
 	//End the game, display the GameOver panel, stop time, and display outcome text

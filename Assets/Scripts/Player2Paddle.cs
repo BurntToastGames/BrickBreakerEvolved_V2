@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Player2Paddle : MonoBehaviour
 {
+    public GameObject collisionParticle;
+
 	private GameObject player2Paddle;
 
     public float MovementSpeed = 10f;
@@ -25,6 +27,9 @@ public class Player2Paddle : MonoBehaviour
     {
         if (col.gameObject.tag == "Ball2")
         {
+            Vector3 collisionPoint = col.contacts[0].point;
+            Destroy(Instantiate(collisionParticle, collisionPoint, Quaternion.Euler(-90f, 0f, 0f)), 4f);
+
             GameObject.FindGameObjectWithTag("Game Manager").SendMessage("resetCombo", 2);
         }
     }
