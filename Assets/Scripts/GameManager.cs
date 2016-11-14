@@ -353,7 +353,7 @@ public class Power : MonoBehaviour
 				ShrinkPaddle(player, power);
 				break;
             case PowerUpKey.MultiBall:
-				MultiBall(player);
+				MultiBall(player); if (UnityEngine.Random.value <= 0.5) MultiBall(player);
                 break;
             case PowerUpKey.AddLine:
                 AddLine(player , power);
