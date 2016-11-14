@@ -15,12 +15,19 @@ public class PowerUp : MonoBehaviour
 
     public int addLineUpperBound = 3;
 
+	public AudioSource au_pickUp;
+
+	public float au_pickUpVolume = 0.5f;
+
     Transform trans;
 
 	// Use this for initialization
 	void Start ()
     {
         trans = GetComponent<Transform>();
+
+		au_pickUp = (AudioSource)gameObject.AddComponent<AudioSource>();//Initialize an audio source 
+
 	}
 	
 	// Update is called once per frame
@@ -43,10 +50,33 @@ public class PowerUp : MonoBehaviour
 																						   powerUpKey = powerUpName,
 																						  scaleAmount = scaleAmount,
                                                                                     addLineUpperBound = addLineUpperBound} );
-
-           Destroy(this.gameObject);
+			assignPickUpSFX (powerUpName);
+			Destroy(this.gameObject);
         }
     }
+	void assignPickUpSFX(PowerUpKey powerUpName)
+	{
+		switch (powerUpName)
+		{
+		case PowerUpKey.GrowPaddle:
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/healthup");
+			break;
+		case PowerUpKey.ShrinkPaddle:
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");
+			break;
+		case PowerUpKey.MultiBall:
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");
+			break;
+		case PowerUpKey.AddLine:
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");;
+			break;
+		default:
+			break;
+		}
+		print (au_pickUp.clip);
+		au_pickUp.volume = au_pickUpVolume;
+		au_pickUp.Play();
+	}
 }
 
 public class applyPowerUpInfo
