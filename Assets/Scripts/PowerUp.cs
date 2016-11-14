@@ -19,6 +19,8 @@ public class PowerUp : MonoBehaviour
 
 	public float au_pickUpVolume = 0.5f;
 
+	SpriteRenderer renderer;
+
     Transform trans;
 
 	// Use this for initialization
@@ -26,7 +28,8 @@ public class PowerUp : MonoBehaviour
     {
         trans = GetComponent<Transform>();
 
-		au_pickUp = (AudioSource)gameObject.AddComponent<AudioSource>();//Initialize an audio source 
+		au_pickUp = (AudioSource)gameObject.AddComponent<AudioSource>();//Initialize an audio source
+		au_pickUp.playOnAwake = false;
 
 	}
 	
@@ -50,33 +53,45 @@ public class PowerUp : MonoBehaviour
 																						   powerUpKey = powerUpName,
 																						  scaleAmount = scaleAmount,
                                                                                     addLineUpperBound = addLineUpperBound} );
-			assignPickUpSFX (powerUpName);
+			
+			//renderer = this.gameObject.GetComponentInChildren<SpriteRenderer> ();
+			//assignPickUpSFX (powerUpName);
+			//PlayAudioAndDestroy (au_pickUp.clip, this.gameObject);
 			Destroy(this.gameObject);
         }
     }
+	/*
+	IEnumerator PlayAudioAndDestroy(AudioClip clip, GameObject curObject)
+	{
+		print ("In play audio");
+		renderer.enabled = false;
+		au_pickUp.volume = au_pickUpVolume;
+		au_pickUp.Play();
+
+		yield return new WaitForSeconds (clip.length);
+		Destroy(this.gameObject);
+	}
 	void assignPickUpSFX(PowerUpKey powerUpName)
 	{
 		switch (powerUpName)
 		{
 		case PowerUpKey.GrowPaddle:
-			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/healthup");
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/missile_impact1");
 			break;
 		case PowerUpKey.ShrinkPaddle:
-			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/missile_impact1");
 			break;
 		case PowerUpKey.MultiBall:
-			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/missile_impact1");
 			break;
 		case PowerUpKey.AddLine:
-			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/impact2");;
+			au_pickUp.clip = (AudioClip)Resources.Load ("Sound/missile_impact1");;
 			break;
 		default:
 			break;
 		}
-		print (au_pickUp.clip);
-		au_pickUp.volume = au_pickUpVolume;
-		au_pickUp.Play();
 	}
+	*/
 }
 
 public class applyPowerUpInfo
