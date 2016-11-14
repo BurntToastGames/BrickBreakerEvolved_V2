@@ -36,11 +36,13 @@ public class Brick : MonoBehaviour
 
         Vector3 contactPoint = collision.contacts[0].point;
 
-        if(player == 1)
-            Destroy(Instantiate(DPBlue, contactPoint, Quaternion.identity), 4f);
-        else
-            Destroy(Instantiate(DPRed, contactPoint, Quaternion.identity), 4f);
-
+		if (player == 1) 
+		{
+			Destroy (Instantiate (DPBlue, contactPoint, Quaternion.identity), 4f);
+		} else 
+		{
+			Destroy (Instantiate (DPRed, contactPoint, Quaternion.identity), 4f);
+		}
     }
 
     void ScootLinesUp(float brickYPos)
