@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] LinePrefabs;
 	public GameObject gameOverPanel;
     public GameObject PowerUpPrefab;
+	public GameObject gamePausePanel;
 	public int maxLineCount;
 
     public int bricksPerLine = 12;       //bricks needed to send a line.
@@ -33,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     private Text gameOverText;
 
+	private bool gamePaused = false;
+
     // Use this for initialization
     void Start ()
     {
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviour
 		gameOverText = GameObject.Find("OutcomeText").GetComponent<Text>();
 
 		gameOverPanel.SetActive (false);
+		gamePausePanel.SetActive (false);
 
         
         player1 = new Player()
@@ -107,10 +111,25 @@ public class GameManager : MonoBehaviour
 
         return brickCount;
     }
-
+	public void ContinueGame(bool button_input)
+	{
+		gamePaused = false;
+		Time.timeScale = 1;
+		gamePausePanel.SetActive (false);
+	}
     // Update is called once per frame
     void Update ()
     {
+		if(Input.GetKeyDown("escape") && gamePaused == false) 
+		{
+			gamePaused = true;
+			Time.timeScale = 0;
+			gamePausePanel.SetActive (true);
+		}
+		else if (Input.GetKeyDown ("escape") && gamePaused == true) 
+		{
+			ContinueGame (false);
+		}
         //Victory by board clear.
         checkClearVictory(player1, player2);
     }
