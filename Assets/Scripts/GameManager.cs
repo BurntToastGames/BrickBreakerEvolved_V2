@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
 	private Text player1PendingText;
 	private Text player2PendingText;
 
+	private Slider player1PendingSlider;
+	private Slider player2PendingSlider;
+
     private Text player1ScoreText;
     private Text player2ScoreText;
 
@@ -48,6 +51,9 @@ public class GameManager : MonoBehaviour
 
         player1WinsText = GameObject.Find("Player 1 Wins").GetComponent<Text>();
         player2WinsText = GameObject.Find("Player 2 Wins").GetComponent<Text>();
+
+		player1PendingSlider = GameObject.Find("Player 1 Pending Slider").GetComponent<Slider>();
+		player2PendingSlider = GameObject.Find("Player 2 Pending Slider").GetComponent<Slider>();
 
 		gameOverText = GameObject.Find("OutcomeText").GetComponent<Text>();
 
@@ -232,6 +238,9 @@ public class GameManager : MonoBehaviour
 		{
             AddLine (tempPlayer, victim);
 		}
+
+		player1PendingSlider.value = player2.pendingBricks;
+		player2PendingSlider.value = player1.pendingBricks;
 
 		player1PendingText.text = "Pending : " + player2.pendingBricks;
 		player2PendingText.text = "Pending : " + player1.pendingBricks;
