@@ -117,14 +117,18 @@ public class GameManager : MonoBehaviour
 		Time.timeScale = 1;
 		gamePausePanel.SetActive (false);
 	}
+	void PauseGame()
+	{
+		gamePaused = true;
+		Time.timeScale = 0;
+		gamePausePanel.SetActive (true);
+	}
     // Update is called once per frame
     void Update ()
     {
 		if(Input.GetKeyDown("escape") && gamePaused == false) 
 		{
-			gamePaused = true;
-			Time.timeScale = 0;
-			gamePausePanel.SetActive (true);
+			PauseGame();
 		}
 		else if (Input.GetKeyDown ("escape") && gamePaused == true) 
 		{
