@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     private Text gameOverText;
 
 	private bool gamePaused = false;
+	private bool gameEnd = false;
 
     // Use this for initialization
     void Start ()
@@ -60,13 +61,11 @@ public class GameManager : MonoBehaviour
 		gameOverPanel.SetActive (false);
 		gamePausePanel.SetActive (false);
 
-        
         player1 = new Player()
         {
             playerNumber = 1,
 
-            wins = 0,
-
+			wins = PlayerPrefs.GetInt("Player1Wins",0),
             score = 0,
             comboCount = 0,
 			name = "Player 1",
@@ -85,9 +84,8 @@ public class GameManager : MonoBehaviour
         {
             playerNumber = 2,
 
-            wins = 0,
-
-            score = 0,
+			wins = PlayerPrefs.GetInt("Player2Wins",0),
+			score = 0,
             comboCount = 0,
 			name = "Player 2",
 
@@ -100,7 +98,6 @@ public class GameManager : MonoBehaviour
 
 			recentlyAddedLineY = p2AddLineYOffset
         };
-
         player1WinsText.text = player1.wins.ToString();
         player2WinsText.text = player2.wins.ToString();
 
@@ -193,26 +190,30 @@ public class GameManager : MonoBehaviour
 	//End the game, display the GameOver panel, stop time, and display outcome text
 	void gameOver(Player winner, Player loser)
 	{
+		gameEnd = true;
 		print ("GameOver");		
 		gameOverPanel.SetActive(true);
         gameOverText.text = winner.name + " wins!";
 
-        winner.wins = 1;
-        player1WinsText.text = winner.wins.ToString();
-        player2WinsText.text = loser.wins.ToString();
+		winner.wins += 1;
+        player1WinsText.text = player1.wins.ToString();
+        player2WinsText.text = player2.wins.ToString();
 
         CancelInvoke("spawnPowerUp");
 
         Time.timeScale = 0f;
+
+		PlayerPrefs.SetInt("Player1Wins", player1.wins);
+		PlayerPrefs.SetInt("Player2Wins", player2.wins);
 	}
 	
     //Check who has won the game based on number of lines in each player's screen (more conditions to be added)
 	void checkClearVictory(Player player1, Player player2)
 	{
-		if (player1.BrickGroup.transform.childCount <= 0) {
+		if (player1.BrickGroup.transform.childCount <= 0 && gameEnd == false) {
 			gameOver(player1, player2);
 		}
-		if (player2.BrickGroup.transform.childCount <= 0) {
+		if (player2.BrickGroup.transform.childCount <= 0 && gameEnd == false) {
 			gameOver(player2, player1);
 		}
 	}
@@ -369,7 +370,9 @@ public class Player
 	public string name { get; set; }
 
     public Player()
-    { }
+	{
+	}
+
 }
 
 public class Power : MonoBehaviour
