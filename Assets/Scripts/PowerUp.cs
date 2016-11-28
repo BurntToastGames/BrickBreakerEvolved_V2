@@ -40,7 +40,7 @@ public class PowerUp : MonoBehaviour
         float newYPos = transform.position.y - (FallSpeed * Time.deltaTime);
         trans.position = new Vector2(trans.position.x, newYPos);
 
-        if(trans.position.y < -4.5)
+        if(trans.position.y < -7)
         {
             Destroy(this.gameObject);
         }
