@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     public int bricksPerLine = 12;       //bricks needed to send a line.
     public float scorePerBrick = 50f;    //score needed to send a brick.
-    public float brickValue = 100f;      //default score awarded per brick hit.
+    public float brickValue = 50f;      //default score awarded per brick hit.
 
     public float powerUpSpawnRate = 10f; //In seconds.
 
@@ -271,7 +271,7 @@ public class GameManager : MonoBehaviour
     void AwardScore(Player tempPlayer ,Player tempVictim)
     {
         //Calculate and award score , increment combo count.
-        float brickScore = brickValue + (brickValue * tempPlayer.comboCount) / 10;
+		float brickScore = brickValue + ((scorePerBrick) * (tempPlayer.comboCount/4));
         tempPlayer.score += brickScore;
         tempPlayer.comboCount++;
 

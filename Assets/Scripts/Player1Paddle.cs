@@ -30,7 +30,7 @@ public class Player1Paddle : MonoBehaviour
             Vector3 collisionPoint = col.contacts[0].point;
             Destroy(Instantiate(collisionParticle, collisionPoint, Quaternion.Euler(-90f , 0f , 0f)), 4f);
 
-            GameObject.FindGameObjectWithTag("Game Manager").SendMessage("resetCombo", 1);
+            //GameObject.FindGameObjectWithTag("Game Manager").SendMessage("resetCombo", 1);
         }
     }
 
