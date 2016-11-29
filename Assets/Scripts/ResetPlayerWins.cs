@@ -7,10 +7,13 @@ public class ResetPlayerWins : MonoBehaviour {
 	void Start () {
 		PlayerPrefs.SetInt ("Player1Wins", 0);
 		PlayerPrefs.SetInt ("Player2Wins", 0);
+
+		Time.timeScale = 1f;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () 
+	{
+			
 	}
 }
