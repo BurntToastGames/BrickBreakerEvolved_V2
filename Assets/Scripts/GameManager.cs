@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
 
     private Text player1ScoreText;
     private Text player2ScoreText;
+	private bool p1Growing = true;
+	private bool p2Growing = true;
+	private float scaleTextFactor = 0.005f;
 
     private Text player1WinsText;
     private Text player2WinsText;
@@ -129,6 +132,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+		if (Time.timeScale == 1f)
+		{
+			PulsateScores();
+		}
+
 		if(Input.GetKeyDown("escape") && gamePaused == false) 
 		{
 			PauseGame();
@@ -140,6 +148,52 @@ public class GameManager : MonoBehaviour
         //Victory by board clear.
         checkClearVictory(player1, player2);
     }
+	void PulsateScores()
+	{
+		Vector3 textVecP1 = player1ScoreText.transform.localScale;
+		Vector3 textVecP2 = player2ScoreText.transform.localScale;
+
+		if (p1Growing) 
+		{
+			textVecP1.x = textVecP1.x + scaleTextFactor;
+			textVecP1.y = textVecP1.y + scaleTextFactor;
+			player1ScoreText.transform.localScale = textVecP1;
+			if (textVecP1.x >= 1.2f) 
+			{
+				p1Growing = false;
+			}
+		}
+		if (p2Growing) 
+		{
+			textVecP2.x = textVecP2.x + scaleTextFactor;
+			textVecP2.y = textVecP2.y + scaleTextFactor;
+			player2ScoreText.transform.localScale = textVecP2;
+			if (textVecP2.x >= 1.2f) 
+			{
+				p2Growing = false;
+			}
+		}
+		if (p1Growing == false) 
+		{
+			textVecP1.x = textVecP1.x - scaleTextFactor;
+			textVecP1.y = textVecP1.y - scaleTextFactor;
+			player1ScoreText.transform.localScale = textVecP1;
+			if (textVecP1.x <= 1f) 
+			{
+				p1Growing = true;
+			}
+		}
+		if (p2Growing == false) 
+		{
+			textVecP2.x = textVecP2.x - scaleTextFactor;
+			textVecP2.y = textVecP2.y - scaleTextFactor;
+			player2ScoreText.transform.localScale = textVecP2;
+			if (textVecP2.x <= 1f) 
+			{
+				p2Growing = true;
+			}
+		}
+	}
 
     //Spawns a powerup to a given player. The disadvantaged player has a better chance of getting the spawned power-up (advantage is based on score).
     void spawnPowerUp()
