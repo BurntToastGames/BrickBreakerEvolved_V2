@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         {
             playerNumber = 1,
 
-			wins = PlayerPrefs.GetInt("Player1Wins",0),
+			wins = PlayerPrefs.GetInt("Player1Wins"),
             score = 0,
             comboCount = 0,
 			name = "Player 1",
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         {
             playerNumber = 2,
 
-			wins = PlayerPrefs.GetInt("Player2Wins",0),
+			wins = PlayerPrefs.GetInt("Player2Wins"),
 			score = 0,
             comboCount = 0,
 			name = "Player 2",
@@ -244,6 +244,7 @@ public class GameManager : MonoBehaviour
 	//End the game, display the GameOver panel, stop time, and display outcome text
 	void gameOver(Player winner, Player loser)
 	{
+		Time.timeScale = 0f;
 		gameEnd = true;
 		print ("GameOver");		
 		gameOverPanel.SetActive(true);
@@ -254,8 +255,6 @@ public class GameManager : MonoBehaviour
         player2WinsText.text = player2.wins.ToString();
 
         CancelInvoke("spawnPowerUp");
-
-        Time.timeScale = 0f;
 
 		PlayerPrefs.SetInt("Player1Wins", player1.wins);
 		PlayerPrefs.SetInt("Player2Wins", player2.wins);
